@@ -8,7 +8,11 @@ Fort uses [Semantic Versioning 2.0.0](https://semver.org/).
 
 ## Installation ##
 
+Nuget Gallery: https://www.nuget.org/packages/RhoMicro.Fort
 
+Package Manager: `Install-Package RhoMicro.Fort -Version 1.1.0`
+
+.Net CLI: `dotnet add package RhoMicro.Fort --version 1.1.0`
 
 ## How To Use ##
 
