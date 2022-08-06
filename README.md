@@ -2,6 +2,14 @@
 
 Fort provides extensions for defensive programming.
 
+## Versioning ##
+
+Fort uses [Semantic Versioning 2.0.0](https://semver.org/).
+
+## Installation ##
+
+
+
 ## How To Use ##
 
 Use Fort extensions by including the `Fort` namespace.
