@@ -5,7 +5,7 @@ Fort provides extensions for defensive programming.
 ## How To Use ##
 
 Use Fort extensions by including the `Fort` namespace.
-´´´cs
+```cs
 using Fort;
 
 public void MyMethod(String arg){
@@ -13,4 +13,4 @@ public void MyMethod(String arg){
   
   arg.ThrowIfNot(s => s.StartsWith('G'), $"{nameof(arg)} must start with G.", nameof(arg)) //throws ArgumentException when predicate does not match
 }
-´´´
+```
