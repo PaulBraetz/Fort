@@ -1,15 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
-	  <ImplicitUsings>enable</ImplicitUsings>
-	  <Nullable>enable</Nullable>
+	  <TargetFramework>netstandard2.0</TargetFramework>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Authors>Paul Brätz</Authors>
 	  <Description>Defensive Functions and Extensions for .Net</Description>
 	  <Copyright>2022</Copyright>
 	  <PackageTags>Rhomicro</PackageTags>
-	  <Version>1.1.0</Version>
+	  <Version>1.1.1</Version>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageId>RhoMicro.Fort</PackageId>
 	  <AssemblyName>Fort</AssemblyName>
