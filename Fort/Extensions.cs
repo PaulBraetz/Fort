@@ -40,7 +40,7 @@ namespace Fort
 			}
 		}
 		/// <summary>
-		/// Throws <see cref="ArgumentNullException"/> when <paramref name="argument"/> is <see langword="default"/> or <see langword="null"/> or <see cref="ArgumentException"/> when <paramref name="argument"/> does not match against <paramref name="validation"/>
+		/// Throws <see cref="ArgumentNullException"/> when <paramref name="argument"/> is <see langword="default"/> or <see langword="null"/> or an <see cref="ArgumentException"/> when <paramref name="argument"/> does not match against <paramref name="validation"/>
 		///  </summary>
 		/// <typeparam name="T">The argument Type</typeparam>
 		/// <param name="argument">The argument to check</param>
@@ -55,7 +55,7 @@ namespace Fort
 			argument.ThrowIfNot(validation, message, name);
 		}
 		/// <summary>
-		/// Throws <see cref="ArgumentNullException"/> when <paramref name="collection"/> is <see langword="default"/> or <see langword="null"/> or <see cref="ArgumentException"/> when <paramref name="collection"/> is empty
+		/// Throws <see cref="ArgumentNullException"/> when <paramref name="collection"/> is <see langword="default"/> or <see langword="null"/> or an <see cref="ArgumentException"/> when <paramref name="collection"/> is empty
 		/// </summary>
 		/// <typeparam name="T">The item type of <paramref name="collection"/></typeparam>
 		/// <param name="collection">The collection to check</param>
@@ -64,18 +64,35 @@ namespace Fort
 		/// <exception cref="ArgumentException">Thrown when <paramref name="collection"/> is empty</exception>
 		public static void ThrowIfDefaultOrEmpty<T>(this IEnumerable<T> enumeration, String name = null)
 		{
-			if(enumeration is ICollection collection)
+			if (enumeration is T[] array)
+			{
+				array.ThrowIfDefaultOrEmpty(name);
+			}
+			else if (enumeration is ICollection collection)
 			{
 				collection.ThrowIfDefaultOrEmpty(name);
 			}
 			else
 			{
-				String message = GetEmptyCollectionMessage(name);
-				enumeration.ThrowIfDefaultOrNot(a => a.Any(), message, name);
+				String message = GetEmptyCollectionMessage(name ?? "Enumeration");
+				enumeration.ThrowIfDefaultOrNot(a => a.GetEnumerator().MoveNext(), message, name);
 			}
 		}
 		/// <summary>
-		/// Throws <see cref="ArgumentNullException"/> when <paramref name="collection"/> is <see langword="default"/> or <see langword="null"/> or <see cref="ArgumentException"/> when <paramref name="collection"/> is empty
+		/// Throws <see cref="ArgumentNullException"/> when <paramref name="array"/> is <see langword="default"/> or <see langword="null"/> or an <see cref="ArgumentException"/> when <paramref name="collection"/> is empty
+		/// </summary>
+		/// <typeparam name="T">The item type of <paramref name="collection"/></typeparam>
+		/// <param name="array">The array to check</param>
+		/// <param name="name">The name of <paramref name="collection"/></param>
+		/// <exception cref="ArgumentNullException">Thrown when <paramref name="collection"/> is <see langword="default"/> or <see langword="null"/></exception>
+		/// <exception cref="ArgumentException">Thrown when <paramref name="collection"/> is empty</exception>
+		public static void ThrowIfDefaultOrEmpty<T>(this T[] array, String name = null)
+		{
+			String message = GetEmptyCollectionMessage(name ?? "Array");
+			array.ThrowIfDefaultOrNot(a => a.Length > 0, message, name);
+		}
+		/// <summary>
+		/// Throws <see cref="ArgumentNullException"/> when <paramref name="collection"/> is <see langword="default"/> or <see langword="null"/> or an <see cref="ArgumentException"/> when <paramref name="collection"/> is empty
 		/// </summary>
 		/// <typeparam name="T">The item type of <paramref name="collection"/></typeparam>
 		/// <param name="collection">The collection to check</param>
@@ -84,12 +101,13 @@ namespace Fort
 		/// <exception cref="ArgumentException">Thrown when <paramref name="collection"/> is empty</exception>
 		public static void ThrowIfDefaultOrEmpty(this ICollection collection, String name = null)
 		{
-			String message = GetEmptyCollectionMessage(name);
+			String message = GetEmptyCollectionMessage(name ?? "Collection");
 			collection.ThrowIfDefaultOrNot(a => a.Count > 0, message, name);
 		}
+
 		private static String GetEmptyCollectionMessage(String name)
 		{
-			return name != null ? $"{name} cannot be empty." : null; ;
+			return name != null ? $"{name} cannot be empty." : null;
 		}
 	}
 }
