@@ -111,6 +111,110 @@ namespace Fort.Tests
 				};
 			}
 		}
+		private static Object[][] Nulls
+		{
+			get
+			{
+				return new Object[][]
+				{
+					new object[]
+					{
+						null, "Object Value", "value cannot be null"
+					},new object[]
+					{
+						default(String),"String Value", "Expected non null value"
+					},new object[]
+					{
+						default(Object), "Object Value", null
+					}
+				};
+			}
+		}
+		private static Object[][] NonNulls
+		{
+			get
+			{
+				return new Object[][]
+				{
+					new object[]
+					{
+						"Some Value", "Object Value", "value cannot be null"
+					},new object[]
+					{
+						Byte.MaxValue, "Byte Value", "Sample message"
+					},new object[]
+					{
+						SByte.MinValue, "Signed Byte Value", String.Empty
+					},new object[]
+					{
+						String.Empty,"String Value", "Expected non null value"
+					},new object[]
+					{
+						Int16.MinValue, "Integer 16 Value", "..."
+					},new object[]
+					{
+						UInt16.MaxValue, "Unsigned Integer 16 Value","-"
+					},new object[]
+					{
+						Int32.MinValue, "Integer 32 Value", "integer expected"
+					},new object[]
+					{
+						UInt32.MaxValue, "Unsigned Integer 34 Value", null
+					},new object[]
+					{
+						Int64.MinValue, null, "Some message"
+					},new object[]
+					{
+						UInt64.MinValue, null, null
+					},new object[]
+					{
+						Single.MinValue, "Single Value", "none"
+					},new object[]
+					{
+						Double.MaxValue, "Double value", "11312"
+					},new object[]
+					{
+						Decimal.MinValue, "Decimal Value", String.Empty
+					},new object[]
+					{
+						new Object(), "Object Value", null
+					},new object[]
+					{
+						default(Byte), "Byte Value", "Sample message"
+					},new object[]
+					{
+						default(SByte), "Signed Byte Value", String.Empty
+					},new object[]
+					{
+						default(Int16), "Integer 16 Value", "..."
+					},new object[]
+					{
+						default(UInt16), "Unsigned Integer 16 Value","-"
+					},new object[]
+					{
+						default(Int32), "Integer 32 Value", "integer expected"
+					},new object[]
+					{
+						default(UInt32), "Unsigned Integer 34 Value", null
+					},new object[]
+					{
+						default(Int64), null, "Some message"
+					},new object[]
+					{
+						default(UInt64), null, null
+					},new object[]
+					{
+						default(Single), "Single Value", "none"
+					},new object[]
+					{
+						default(Double), "Double value", "11312"
+					},new object[]
+					{
+						default(Decimal), "Decimal Value", String.Empty
+					}
+				};
+			}
+		}
 		#endregion
 		#region ThrowIfDefault
 		[TestMethod]
@@ -281,6 +385,43 @@ namespace Fort.Tests
 		}
 		#endregion
 
+		#region ThrowIfNull
+		[TestMethod]
+		[DynamicData(nameof(Nulls))]
+		public void Null(Object value, String name, String message)
+		{
+			AssertThrows<ArgumentNullException>(() => value.ThrowIfNull(), ex => String.IsNullOrEmpty(ex.ParamName));
+		}
+		[TestMethod]
+		[DynamicData(nameof(Nulls))]
+		public void NamedNull(Object value, String name, String message)
+		{
+			AssertThrows<ArgumentNullException>(() => value.ThrowIfNull(name), ex => ex.ParamName == name);
+		}
+		[TestMethod]
+		[DynamicData(nameof(Nulls))]
+		public void MessageNull(Object value, String name, String message)
+		{
+			AssertThrows<ArgumentNullException>(() => value.ThrowIfNull(message: message), ex => String.IsNullOrEmpty(ex.ParamName) && (message == null || ex.Message.Substring(0, message.Length) == message));
+		}
+		[TestMethod]
+		[DynamicData(nameof(Nulls))]
+		public void NamedMessageNull(Object value, String name, String message)
+		{
+			AssertThrows<ArgumentNullException>(() => value.ThrowIfNull(name, message),
+				ex =>
+				{
+					var result = ex.ParamName == name && (message == null || ex.Message.Substring(0, message.Length) == message);
+					return result;
+				});
+		}
+		[TestMethod]
+		[DynamicData(nameof(NonNulls))]
+		public void NonNull(Object value, String name, String message)
+		{
+			value.ThrowIfNull();
+		}
+		#endregion
 		//TODO: more tests eh
 
 		private static void AssertThrows<TException>(Action action, Func<TException, Boolean> matchPredicate)
